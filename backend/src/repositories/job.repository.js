@@ -85,7 +85,7 @@ async function findDuplicateGroups({ page = 1, limit = 20, status } = {}) {
 
   const groupIdsAgg = await Job.aggregate([
     { $match: match },
-    { $group: { _id: '$duplicateGroupId', count: { $sum: 1 } } },
+    { $group: { _id: "$duplicateGroupId", count: { $sum: 1 } } },
     { $sort: { count: -1 } },
     { $skip: skip },
     { $limit: limit },
@@ -94,8 +94,8 @@ async function findDuplicateGroups({ page = 1, limit = 20, status } = {}) {
   const groupIds = groupIdsAgg.map((g) => g._id);
   const totalGroupsAgg = await Job.aggregate([
     { $match: match },
-    { $group: { _id: '$duplicateGroupId' } },
-    { $count: 'total' },
+    { $group: { _id: "$duplicateGroupId" } },
+    { $count: "total" },
   ]);
 
   const jobs = await Job.find({ duplicateGroupId: { $in: groupIds } })
@@ -104,7 +104,8 @@ async function findDuplicateGroups({ page = 1, limit = 20, status } = {}) {
 
   const groupsMap = new Map();
   for (const job of jobs) {
-    if (!groupsMap.has(job.duplicateGroupId)) groupsMap.set(job.duplicateGroupId, []);
+    if (!groupsMap.has(job.duplicateGroupId))
+      groupsMap.set(job.duplicateGroupId, []);
     groupsMap.get(job.duplicateGroupId).push(job);
   }
 
@@ -119,7 +120,71 @@ async function findDuplicateGroups({ page = 1, limit = 20, status } = {}) {
       total: totalGroupsAgg[0]?.total || 0,
       page,
       limit,
-      totalPages: Math.max(1, Math.ceil((totalGroupsAgg[0]?.total || 0) / limit)),
+      totalPages: Math.max(
+        1,
+        Math.ceil((totalGroupsAgg[0]?.total || 0) / limit)
+      ),
     },
   };
 }
+
+async function updateDuplicateReviewStatus(jobId, status) {
+  return Job.findByIdAndUpdate(
+    jobId,
+    { duplicateReviewStatus: status },
+    { new: true }
+  ).lean();
+}
+
+async function getAggregateCounts() {
+  const [totalJobs, totalDuplicates, totalCompanies] = await Promise.all([
+    Job.countDocuments({}),
+    Job.countDocuments({ isDuplicate: true }),
+    Job.distinct("normalizedCompany").then((arr) => arr.length),
+  ]);
+  return { totalJobs, totalDuplicates, totalCompanies };
+}
+
+async function groupCountBy(field) {
+  return Job.aggregate([
+    { $group: { _id: `$${field}`, count: { $sum: 1 } } },
+    { $sort: { count: -1 } },
+  ]);
+}
+
+async function postingsTrend(days = 30) {
+  const since = new Date();
+  since.setDate(since.getDate() - days);
+  return Job.aggregate([
+    { $match: { "datePosted.parsed": { $gte: since, $ne: null } } },
+    {
+      $group: {
+        _id: {
+          $dateToString: { format: "%Y-%m-%d", date: "$datePosted.parsed" },
+        },
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { _id: 1 } },
+  ]);
+}
+
+async function topCompanies(limit = 10) {
+  return Job.aggregate([
+    { $group: { _id: "$company", count: { $sum: 1 } } },
+    { $sort: { count: -1 } },
+    { $limit: limit },
+  ]);
+}
+
+export default jobRepository = {
+  findJobs,
+  findById,
+  getDistinctValues,
+  findDuplicateGroups,
+  updateDuplicateReviewStatus,
+  getAggregateCounts,
+  groupCountBy,
+  postingsTrend,
+  topCompanies,
+};
