@@ -34,4 +34,10 @@ async function runDetection() {
   return detectAndFlagDuplicates();
 }
 
-export { listDuplicateGroups, reviewJob, runDetection };
+const duplicateService = {
+  listDuplicateGroups,
+  reviewJob,
+  runDetection,
+};
+
+export default duplicateService;

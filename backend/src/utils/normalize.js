@@ -196,7 +196,7 @@ function tokenize(value = "") {
   );
 }
 
-exports = {
+export {
   normalizeText,
   cleanDisplayText,
   normalizeLocation,

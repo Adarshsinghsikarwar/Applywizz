@@ -58,4 +58,5 @@ async function getFilterOptions() {
   };
 }
 
-export { searchJobs, getJobById, getFilterOptions };
+const jobService = { searchJobs, getJobById, getFilterOptions };
+export default jobService;

@@ -177,7 +177,7 @@ async function topCompanies(limit = 10) {
   ]);
 }
 
-export default jobRepository = {
+const jobRepository = {
   findJobs,
   findById,
   getDistinctValues,
@@ -188,3 +188,5 @@ export default jobRepository = {
   postingsTrend,
   topCompanies,
 };
+
+export default jobRepository;

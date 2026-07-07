@@ -38,3 +38,9 @@ async function getDashboardMetrics() {
     topCompanies,
   };
 }
+
+const analyticsService = {
+  getDashboardMetrics,
+};
+
+export default analyticsService;
