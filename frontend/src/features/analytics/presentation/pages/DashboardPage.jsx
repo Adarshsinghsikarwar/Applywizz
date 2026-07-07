@@ -16,31 +16,42 @@ export default function DashboardPage() {
   const { totals, breakdowns, postingsTrend, topCompanies } = metrics;
 
   return (
-    <div className="flex flex-col gap-4">
-      <div>
-        <h1 className="text-lg font-semibold text-ink-800">Dashboard</h1>
-        <p className="text-sm text-ink-400">Key metrics across the full job dataset.</p>
+    <div className="flex flex-col gap-6">
+      {/* Page Header */}
+      <div className="flex flex-col gap-1 border-b border-ink-100 pb-4">
+        <h1 className="text-2xl font-bold tracking-tight text-ink-900">Console Analytics</h1>
+        <p className="text-sm text-ink-500">
+          Key metrics and distributional insights across the full job dataset.
+        </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <MetricCard label="Total jobs" value={totals.totalJobs} />
-        <MetricCard label="Companies" value={totals.totalCompanies} />
+      {/* KPI Cards Grid */}
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <MetricCard label="Total postings" value={totals.totalJobs} />
+        <MetricCard label="Unique companies" value={totals.totalCompanies} />
         <MetricCard
-          label="Duplicate jobs"
+          label="Duplicate postings"
           value={totals.totalDuplicateJobs}
-          hint={`${totals.duplicateRate}% of all jobs`}
+          hint={`${totals.duplicateRate}% redundancy rate`}
         />
-        <MetricCard label="Top company" value={topCompanies?.[0]?.count} hint={topCompanies?.[0]?._id} />
+        <MetricCard
+          label="Top employer"
+          value={topCompanies?.[0]?.count || 0}
+          hint={topCompanies?.[0]?._id || 'N/A'}
+        />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <BreakdownChart title="Jobs by department" data={shapeBreakdown(breakdowns.byDepartment)} />
-        <BreakdownChart title="Jobs by employment type" data={shapeBreakdown(breakdowns.byEmploymentType)} />
-        <BreakdownChart title="Jobs by experience level" data={shapeBreakdown(breakdowns.byExperienceLevel)} />
-        <BreakdownChart title="Jobs by work mode" data={shapeBreakdown(breakdowns.byRemoteFlag)} />
+      {/* Charts section */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <BreakdownChart title="Postings by department" data={shapeBreakdown(breakdowns.byDepartment)} />
+        <BreakdownChart title="Postings by employment type" data={shapeBreakdown(breakdowns.byEmploymentType)} />
+        <BreakdownChart title="Postings by experience level" data={shapeBreakdown(breakdowns.byExperienceLevel)} />
+        <BreakdownChart title="Postings by work mode" data={shapeBreakdown(breakdowns.byRemoteFlag)} />
       </div>
 
-      <TrendChart data={shapeTrend(postingsTrend)} />
+      <div className="mt-2">
+        <TrendChart data={shapeTrend(postingsTrend)} />
+      </div>
     </div>
   );
 }

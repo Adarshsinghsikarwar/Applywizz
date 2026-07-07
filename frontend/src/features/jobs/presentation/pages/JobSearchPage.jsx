@@ -18,10 +18,13 @@ export default function JobSearchPage() {
   } = useJobSearch();
 
   return (
-    <div className="flex flex-col gap-4">
-      <div>
-        <h1 className="text-lg font-semibold text-ink-800">Job search</h1>
-        <p className="text-sm text-ink-400">Filter, sort, and browse every posting in the dataset.</p>
+    <div className="flex flex-col gap-6">
+      {/* Header section */}
+      <div className="flex flex-col gap-1 border-b border-ink-100 pb-4">
+        <h1 className="text-2xl font-bold tracking-tight text-ink-900">Postings Database</h1>
+        <p className="text-sm text-ink-500">
+          Filter, sort, and browse every analyzed job posting in the active dataset.
+        </p>
       </div>
 
       <JobFilters

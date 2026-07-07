@@ -8,23 +8,35 @@ const NAV_ITEMS = [
 
 export default function AppLayout() {
   return (
-    <div className="min-h-screen bg-ink-50">
-      <header className="border-b border-ink-100 bg-white px-6 py-3">
+    <div className="min-h-screen bg-gradient-to-b from-ink-50 to-white/30 text-ink-800 selection:bg-signal-100 selection:text-signal-600">
+      {/* Sticky glassmorphic navbar */}
+      <header className="sticky top-0 z-50 border-b border-ink-100/60 bg-white/75 px-6 py-3 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <span className="font-mono text-sm font-semibold tracking-tight text-ink-800">
-            job-portal <span className="text-signal-500">console</span>
-          </span>
-          <nav className="flex gap-1">
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-signal-400 to-signal-600 shadow-md shadow-signal-500/10">
+              <svg className="h-4.5 w-4.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <span className="font-mono text-sm font-bold tracking-tight text-ink-900">
+              apply<span className="text-signal-500">wizz</span>
+              <span className="ml-1.5 rounded-md bg-ink-100 px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-ink-600 uppercase">
+                console
+              </span>
+            </span>
+          </div>
+
+          <nav className="flex gap-1.5">
             {NAV_ITEMS.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
                 end={item.end}
                 className={({ isActive }) =>
-                  `rounded-md px-3 py-1.5 text-sm font-medium ${
+                  `rounded-lg px-3.5 py-1.5 text-xs font-semibold tracking-wide transition-all duration-200 ${
                     isActive
-                      ? "bg-signal-100 text-signal-600"
-                      : "text-ink-500 hover:bg-ink-100"
+                      ? "bg-signal-50 text-signal-600 shadow-sm shadow-signal-500/5"
+                      : "text-ink-500 hover:bg-ink-100/50 hover:text-ink-800"
                   }`
                 }
               >
@@ -35,9 +47,15 @@ export default function AppLayout() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 py-6">
-        <Outlet />
-      </main>
+      {/* Main layout container with decorative top light leak */}
+      <div className="relative overflow-hidden">
+        {/* Soft emerald light leak background */}
+        <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-96 w-[600px] -translate-x-1/2 rounded-full bg-signal-400/5 blur-[120px]" />
+        
+        <main className="mx-auto max-w-6xl px-6 py-8">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }
