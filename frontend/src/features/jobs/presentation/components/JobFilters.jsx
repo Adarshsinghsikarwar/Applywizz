@@ -13,7 +13,7 @@ export default function JobFilters({ filters, setFilter, resetFilters, filterOpt
         <SearchInput
           value={filters.search}
           onChange={(v) => setFilter('search', v)}
-          placeholder="Title, company, key skills…"
+          placeholder="Search by title or company…"
         />
       </div>
 

@@ -11,7 +11,11 @@ function buildFilterQuery(filters = {}) {
   const query = {};
 
   if (filters.search) {
-    query.$text = { $search: filters.search };
+    const escapedSearch = filters.search.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+    query.$or = [
+      { company: { $regex: escapedSearch, $options: "i" } },
+      { title: { $regex: escapedSearch, $options: "i" } },
+    ];
   }
   if (filters.department) query.department = filters.department;
   if (filters.employmentType) query.employmentType = filters.employmentType;
