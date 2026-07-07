@@ -30,4 +30,4 @@ function safeParseDate(raw) {
   return { raw: rawValue, parsed: isValid ? parsed : null, isValid };
 }
 
-exports = { safeParseDate };
+export { safeParseDate };

@@ -49,4 +49,4 @@ function stripToPlainText(rawHtml = "") {
     .trim();
 }
 
-exports = { sanitizeDescriptionHtml, stripToPlainText };
+export { sanitizeDescriptionHtml, stripToPlainText };

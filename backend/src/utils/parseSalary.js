@@ -74,4 +74,4 @@ function parseSalary(rawSalary, rawCurrency) {
   return result;
 }
 
-exports = { parseSalary };
+export { parseSalary };
